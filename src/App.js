@@ -26,6 +26,7 @@ import {
   UserProfit,
   UserStatistics,
   BillManagement,
+  AdminConfig,
 } from "screens";
 
 import { useBinanceSocket, useKucoinSocket } from "hooks";
@@ -72,6 +73,8 @@ function App() {
           <Route path="pl-account" element={<PLAccount />} />
           <Route path="conversion" element={<Conversion />} />
           <Route path="leverage" element={<Leverage />} />
+          <Route path="bot-config" element={<AdminConfig />} />
+
           <Route
             path="user-assign-management"
             element={<UserAssignManagement />}

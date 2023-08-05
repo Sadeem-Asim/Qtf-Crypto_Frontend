@@ -16,37 +16,38 @@ import UserProfit from "./UserProfit";
 import Registration from "./Registration";
 // user pannel
 import BotConfig from "./UserPanel/BotConfig";
-import Prediction from './UserPanel/Prediction'
+import Prediction from "./UserPanel/Prediction";
 import UserStatistics from "./UserPanel/UserStatistics";
 import PLAccount from "./UserPanel/PLAccount";
 import PaidHistory from "./UserPanel/PaidHistory";
 import UserDashboard from "./UserPanel/UserDashboard";
-import UserAssignManagement from "./UserAssignManagement"
+import UserAssignManagement from "./UserAssignManagement";
 import BillManagement from "./BillManagement";
-
-export{
-    Login,
-    Activity,
-    Portfolio,
-    ProfitLoss,
-    CoinMarket,
-    Market,
-    SetupBot,
-    Trailing,
-    Manual,
-    UserManagement,
-    ApiSetting,
-    Satistics,
-    BotConfig,
-    Prediction,
-    UserStatistics,
-    PLAccount,
-    PaidHistory,
-    UserDashboard,
-    Dashboard,
-    AdminPLAccount,
-    UserProfit,
-    Registration,
-    UserAssignManagement,
-    BillManagement
-}
+import AdminConfig from "./Admins/AdminConfig.jsx";
+export {
+  AdminConfig,
+  Login,
+  Activity,
+  Portfolio,
+  ProfitLoss,
+  CoinMarket,
+  Market,
+  SetupBot,
+  Trailing,
+  Manual,
+  UserManagement,
+  ApiSetting,
+  Satistics,
+  BotConfig,
+  Prediction,
+  UserStatistics,
+  PLAccount,
+  PaidHistory,
+  UserDashboard,
+  Dashboard,
+  AdminPLAccount,
+  UserProfit,
+  Registration,
+  UserAssignManagement,
+  BillManagement,
+};

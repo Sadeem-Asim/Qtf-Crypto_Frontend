@@ -27,18 +27,20 @@ const INITIAL_STATE = {
   day: 0,
 };
 
-function BotConfig() {
-  const { user } = useSelector((store) => store.user);
-
-  const { pathname } = useLocation();
-  const { userOrders, refetchOrders } = useFetchUserOrders();
-  const { data: coins, balance } = useSelector((store) => store.binance);
+function AdminConfig() {
+  //   const { user } = useSelector((store) => store.user);
+  const { pathname, state } = useLocation();
+  console.log(state);
+  //   const { userOrders, refetchOrders } = useFetchUserOrders();
+  const [userOrders, setOrders] = useState([]);
+  const { data: coins } = useSelector((store) => store.binance);
+  const [balance, setBalance] = useState();
   const [coin, setCoin] = useState(null);
   const [bot, setBot] = useState({ id: null, exchange: "", user_id: null });
   const [botData, setBotData] = useState(INITIAL_STATE);
   const [exchange, setExchange] = useState("Binance");
   const [modalStatus, setModalStatus] = useState(false);
-
+  const [update, setUpdate] = useState(1);
   const { mutate: createBot, isLoading: createBotLoader } = useMutation(
     "createBot",
     apis.createBot,
@@ -47,12 +49,34 @@ function BotConfig() {
       onSuccess: async ({ status, data: message }) => {
         if (status === 200) {
           setBotData(INITIAL_STATE);
-          await refetchOrders();
+          //   await refetchOrders();
+          setUpdate((a) => a + 1);
           toast.success(message);
         }
       },
     }
   );
+  useEffect(() => {
+    // console.log("HELLO");
+    apis
+      .getAvailableBalance(state?.userId, "USDT", "Main Account")
+      .then((res) => {
+        setBalance(res.data.balance);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    apis
+      .userBots(state?.userId)
+      .then((res) => {
+        console.log(res.data);
+        setOrders(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [coin, state?.userId, update]);
 
   useEffect(() => {
     if (coins && botData.coin) {
@@ -150,7 +174,7 @@ function BotConfig() {
     const formData = {
       ...data,
       exchange: data.exchange?.toUpperCase(),
-      user: user._id,
+      user: state?.userId,
     };
 
     const { error } = createBotValidation(formData);
@@ -347,11 +371,13 @@ function BotConfig() {
           show={modalStatus}
           handleClose={toggleBotModal}
           bot={bot}
-          refetchOrders={refetchOrders}
+          refetchOrders={() => {
+            setUpdate((a) => a + 1);
+          }}
         />
       </div>
     </>
   );
 }
 
-export default BotConfig;
+export default AdminConfig;

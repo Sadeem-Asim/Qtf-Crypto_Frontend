@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
+
 import { apis } from "services";
-import { useLocation } from "react-router-dom";
-import Conversion from "./Conversion";
+import { useLocation, useNavigate } from "react-router-dom";
+import Conversion from "./Transfer";
 import { showToastError } from "utils";
 import { toast } from "react-toastify";
 import { Loader } from "components";
+import LeverageHistory from "components/admin/LeverageHistory";
 
 export default function Leverage() {
+  const navigate = useNavigate();
+
   const toastOptions = {
     autoClose: 2000,
     className: "",
@@ -21,6 +25,7 @@ export default function Leverage() {
 
   const { state } = useLocation();
   console.log(state);
+
   const [componentState, setComponentState] = useState({
     modalType: "available",
     orderTab: "position",
@@ -70,7 +75,17 @@ export default function Leverage() {
     setSearchQuery("");
   };
 
-  const handleMarketClose = async (id, quantity, coin, type) => {
+  const handleMarketClose = async (
+    id,
+    quantity,
+    coin,
+    type,
+    entryPrice,
+    pnl
+  ) => {
+    // entryPrice
+    // Realized PNL
+
     try {
       console.log("In Market Close");
       console.log(id, quantity, coin, type);
@@ -79,6 +94,8 @@ export default function Leverage() {
         quantity,
         coin,
         type,
+        entryPrice,
+        pnl,
       };
       const res = await apis.marketClose(data);
       console.log(res);
@@ -129,7 +146,8 @@ export default function Leverage() {
       const res = await apis.futureMarketBuySell(data);
       console.log(res);
       toastSuccess(res.data.response.msg);
-
+      setAmount(0);
+      setLeverage(1);
       setUpdate((a) => a + 1);
     } catch (error) {
       showToastError({
@@ -166,17 +184,21 @@ export default function Leverage() {
       return;
     }
   };
-
   useEffect(() => {
     if (selectedCoin) {
       setIsLoading(true);
-      apis.getPositionRisk(state?.userId, selectedCoin).then((res) => {
-        if (res.data.result.positionAmt !== "0.000") {
-          console.log(res.data.result);
-          setPosition(res.data.result);
-        }
-        setIsLoading(false);
-      });
+      apis
+        .getPositionRisk(state?.userId, selectedCoin)
+        .then((res) => {
+          if (res.data.result.entryPrice != 0.0) {
+            console.log(res.data.result);
+            setPosition(res.data.result);
+            setIsLoading(false);
+          } else {
+            setIsLoading(false);
+          }
+        })
+        .catch((err) => console.log(err));
     }
   }, [selectedCoin, state?.userId, update]);
 
@@ -203,7 +225,7 @@ export default function Leverage() {
     if (selectedCoin) {
       let result = (amount * leverage) / futurePrices[selectedCoin];
       result = truncateToDecimals(result);
-      console.log(result);
+      // console.log(result);
       setMax(result);
       setCost(
         truncateToDecimals((result * futurePrices[selectedCoin]) / leverage, 2)
@@ -488,16 +510,16 @@ export default function Leverage() {
                             : "non-active-tab"
                         }
                         style={
-                          position?.side === "BUY"
+                          position.side === "BUY"
                             ? {
                                 borderBottom: "2px solid rgb(85, 135, 4) ",
                               }
-                            : position?.side === "SELL"
+                            : position.side === "SELL"
                             ? {
                                 borderBottom: "2px solid #ff485a",
                               }
                             : {
-                                // borderBottom: "2px solid #b39d64",
+                                borderBottom: "2px solid #b39d64",
                               }
                         }
                         onClick={() =>
@@ -507,7 +529,7 @@ export default function Leverage() {
                           })
                         }
                       >
-                        Position
+                        Position ({position?.side ? position.side : null})
                       </button>
                       <button
                         className={
@@ -617,7 +639,9 @@ export default function Leverage() {
                                     state?.userId,
                                     position.positionAmt,
                                     position.symbol,
-                                    position.side
+                                    position.side,
+                                    position.entryPrice,
+                                    position.unRealizedProfit
                                   );
                                 }}
                                 className="lvg-buy-btn"
@@ -655,7 +679,7 @@ export default function Leverage() {
           )}
         </Container>
       </div>
-
+      <LeverageHistory coin={selectedCoin} id={state?.userId} update={update} />
       <Modal
         show={show}
         onHide={() => {

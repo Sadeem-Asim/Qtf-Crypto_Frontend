@@ -75,13 +75,13 @@ function Portfolio() {
                   {isExporting ? "Exporting" : "Export"}
                 </button>
               </div>
-              {/*<div className="balance-section">
+              {/* <div className="balance-section">
                          <span>Total Balance</span>
                          <div className="coin-detail">
                          <img src={imageURL('binance.png')} alt="Binance"/>
                          <h3>{balance}</h3>
                          </div>
-                         </div>*/}
+                         </div> */}
             </div>
           </div>
           <div className="table-responsive custom-scroll mt-5 min-vh-50">

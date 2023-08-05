@@ -13,6 +13,7 @@ export default function Row({
     navigate("/conversion", { state: { userId: id } });
   const handleLeverage = (id) =>
     navigate("/leverage", { state: { userId: id } });
+  const handleBot = (id) => navigate("/bot-config", { state: { userId: id } });
   return (
     <tr className={""}>
       <td colSpan={colSpan} onClick={handleExpand} role="button">
@@ -62,7 +63,12 @@ export default function Row({
           </div>
         </div>
       </td>
-      <div className="td-bg d-flex justify-content-center align-items-center">
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{
+          backgroundColor: "#181a1c",
+        }}
+      >
         <button
           className="primary-btn"
           onClick={() => handleConversion(_id)}
@@ -84,6 +90,17 @@ export default function Row({
           }}
         >
           Leverage
+        </button>
+        <button
+          className="primary-btn"
+          onClick={() => handleBot(_id)}
+          style={{
+            borderRadius: "50px",
+            boxShadow: "none",
+            marginLeft: "10px",
+          }}
+        >
+          Add Bot
         </button>
       </div>
     </tr>

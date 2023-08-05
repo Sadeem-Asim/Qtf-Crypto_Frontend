@@ -3,7 +3,7 @@ export const COINS = { btc: "BTC", eth: "ETH" };
 export const OPERATIONS = { auto: "AUTO", manual: "MANUAL" };
 export const ADMIN_ROLES = { admin: "ADMIN", subAdmin: "SUB_ADMIN" };
 export const INDICATORS = { rsi: "RSI", trailing: "TRAILING" };
-export const EXCHANGES = { binance: "Binance", kuCoin: "kuCoin" };
+export const EXCHANGES = { binance: "Binance" };
 export const DAILY_PROFIT_DAYS = {
   SEVEN_DAYS: 7,
   FOURTEEN: 15,
@@ -54,6 +54,7 @@ export const ADMIN_ROUTES = [
   "/pl-account",
   "/leverage",
   "/conversion",
+  "/bot-config",
   // '/bill-management/:id'
 ];
 

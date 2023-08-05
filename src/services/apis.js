@@ -35,7 +35,7 @@ const createBackendServer = (baseURL) => {
   const allBots = () => api.get("bots");
   const createBot = (body) => api.post("bots", body);
   const updateBot = ({ _id, body }) => api.put(`bots/${_id}`, body);
-  const userBots = ({ queryKey: [user_id] }) => api.get(`bots/${user_id}`);
+  const userBots = (user_id) => api.get(`bots/user-orders/${user_id}`);
   const userOrdersBot = ({ queryKey: [status] }) =>
     api.get(`bots/${status}-orders`);
   const getBotStats = ({ queryKey: [id] }) =>
@@ -59,13 +59,16 @@ const createBackendServer = (baseURL) => {
   const getAvailableBalance = (id, coin, account) =>
     api.get(`binance/availableBalance/${id}/${coin}/${account}`);
   const universalTransfer = (body) => api.post(`binance/transfer`, body);
+  const universalConversion = (body) => api.post(`binance/convert`, body);
+
   const getFuturePrices = (id) => api.get(`binance/futurePrices/${id}`);
   const futureMarketBuySell = (body) => api.post(`binance/futureMarket`, body);
   const getPositionRisk = (id, coin) =>
     api.get(`binance/positionRisk/${id}/${coin}`);
   const marketClose = (body) => api.post(`binance/marketClose`, body);
   const adjustMargin = (body) => api.post(`binance/adjustMargin`, body);
-
+  const getLeverageStats = (id, coin) =>
+    api.get(`binance/leverageHistory/${id}/${coin}`);
   // ADMIN ROUTES
   const deleteBot = (id) => api.delete(`admin/bot/${id}`);
   const allUsers = () => api.get("users/all");
@@ -98,7 +101,6 @@ const createBackendServer = (baseURL) => {
   const clearData = () => api.get("admin/clear_data");
   const exportData = () => api.get("admin/export/bot");
   const activityRecords = () => api.get("admin/activity");
-
   //Returning all the API
   return {
     deleteBot,
@@ -150,6 +152,8 @@ const createBackendServer = (baseURL) => {
     getPositionRisk,
     marketClose,
     adjustMargin,
+    getLeverageStats,
+    universalConversion,
   };
 };
 

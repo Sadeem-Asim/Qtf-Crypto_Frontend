@@ -1,22 +1,23 @@
 import _ from "lodash";
-import {useQuery} from "react-query";
+import { useQuery } from "react-query";
 
-import {apis} from "services";
-import {showToastError} from "utils";
+import { apis } from "services";
+import { showToastError } from "utils";
 
-const useFetchUserOrders = (status = 'open') => {
-    const queryFn = status === 'allBots' ? apis.allBots : apis.userOrdersBot;
-    const {
-        data,
-        refetch: refetchOrders,
-        isLoading,
-        isRefetching
-    } = useQuery([status], queryFn, {onError: showToastError});
+const useFetchUserOrders = (status = "open") => {
+  const queryFn = status === "allBots" ? apis.allBots : apis.userOrdersBot;
 
-    const isFetchingBots = isLoading || isRefetching;
-    const userOrders = _.get(data, 'data', []);
+  const {
+    data,
+    refetch: refetchOrders,
+    isLoading,
+    isRefetching,
+  } = useQuery([status], queryFn, { onError: showToastError });
 
-    return {isFetchingBots, userOrders, refetchOrders};
-}
+  const isFetchingBots = isLoading || isRefetching;
+  const userOrders = _.get(data, "data", []);
 
-export default useFetchUserOrders
+  return { isFetchingBots, userOrders, refetchOrders };
+};
+
+export default useFetchUserOrders;

@@ -5,6 +5,7 @@ import { Dropdown, Form } from "react-bootstrap";
 
 import { STAGES } from "../../constants";
 import { arrangeSettingsArray } from "utils";
+import { getEstimatedTime } from "utils";
 
 const PortfolioDetails = (props) => {
   const {
@@ -36,7 +37,12 @@ const PortfolioDetails = (props) => {
   const botStatusHandler = () => updateBotStatus({ _id, isActive });
 
   const balances = useMemo(() => arrangeSettingsArray(setting), [setting]);
-
+  const { days, minutes, hours } = getEstimatedTime(createdAt);
+  const renderTime = () => `
+  ${days && `${days}D`}
+  ${minutes && `${hours}H`}
+  ${minutes && `${minutes}M`}
+  `;
   const handleDelete = (id) => {
     if (window.confirm("are you sure?")) deleteBot(id);
   };
@@ -82,7 +88,7 @@ const PortfolioDetails = (props) => {
       <td>${balances?.trailing?.investment}</td>
       <td>${balances?.manual?.investment}</td>
       <td>{STAGES[risk]}</td>
-      <td>{day}</td>
+      <td>{renderTime()}</td>
       <td>{stop_at}</td>
       <td>
         <Dropdown className="boot-custom-dropdown">

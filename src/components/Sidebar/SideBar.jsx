@@ -78,9 +78,9 @@ function SideBar({ role }) {
                   {/* <li>
                     <NavLink to={"/conversion"}>Conversion</NavLink>
                   </li> */}
-                  {/* <li>
+                  <li>
                     <NavLink to={"/"}>Total Bot</NavLink>
-                  </li> */}
+                  </li>
                 </ul>
               </CustomDropdown>
             </li>
