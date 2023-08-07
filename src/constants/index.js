@@ -55,6 +55,7 @@ export const ADMIN_ROUTES = [
   "/leverage",
   "/conversion",
   "/bot-config",
+  "/user/pl-account",
   // '/bill-management/:id'
 ];
 

@@ -17,9 +17,9 @@ import {
 import { COINS, DAILY_PROFIT_DAYS, TOTAL_PROFIT_DAYS } from "../../constants";
 import { textColorClass } from "../../utils";
 
-function PLAccount({ isAdmin }) {
+function UserPlAccount({ isAdmin }) {
   const { state } = useLocation();
-
+  console.log(state);
   const [tab, setTab] = useState(COINS.eth);
   const [profitDays, setProfitDays] = useState({
     totalProfitDays: 7,
@@ -30,7 +30,7 @@ function PLAccount({ isAdmin }) {
     data: response,
     isLoading,
     isRefetching,
-  } = useQuery([tab], apis.profitLossAccountDetails, {
+  } = useQuery([tab, state?.userId], apis.profitLossAccountDetailsByUser, {
     onError: (error) => toast.error(error),
     /*onSuccess: ({data, status}) => {
           console.log({data, status});
@@ -197,4 +197,4 @@ function PLAccount({ isAdmin }) {
   );
 }
 
-export default PLAccount;
+export default UserPlAccount;

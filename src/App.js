@@ -36,6 +36,7 @@ import Leverage from "screens/Admins/Leverage";
 import Conversion from "screens/Admins/Conversion";
 import EditUser from "screens/Admins/EditUser";
 import SubAdminSidebar from "./components/Sidebar/SubAdminSidebar";
+import UserPlAccount from "screens/Admins/UserPlAccount";
 
 function App() {
   const { user } = useSelector((store) => store.user);
@@ -71,6 +72,8 @@ function App() {
           <Route path="user-management" element={<UserManagement />} />
           <Route path="satistics" element={<Satistics />} />
           <Route path="pl-account" element={<PLAccount />} />
+          <Route path="user/pl-account" element={<UserPlAccount />} />
+
           <Route path="conversion" element={<Conversion />} />
           <Route path="leverage" element={<Leverage />} />
           <Route path="bot-config" element={<AdminConfig />} />

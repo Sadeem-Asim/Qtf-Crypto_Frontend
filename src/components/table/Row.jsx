@@ -14,6 +14,8 @@ export default function Row({
   const handleLeverage = (id) =>
     navigate("/leverage", { state: { userId: id } });
   const handleBot = (id) => navigate("/bot-config", { state: { userId: id } });
+  const handleProfitLoss = (id) =>
+    navigate("/user/pl-account", { state: { userId: id } });
   return (
     <tr className={""}>
       <td colSpan={colSpan} onClick={handleExpand} role="button">
@@ -100,7 +102,18 @@ export default function Row({
             marginLeft: "10px",
           }}
         >
-          Add Bot
+          Add/Bot
+        </button>
+        <button
+          className="primary-btn"
+          onClick={() => handleProfitLoss(_id)}
+          style={{
+            borderRadius: "50px",
+            boxShadow: "none",
+            marginLeft: "10px",
+          }}
+        >
+          Profit/Loss
         </button>
       </div>
     </tr>

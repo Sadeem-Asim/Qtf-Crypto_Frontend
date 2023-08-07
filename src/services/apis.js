@@ -50,6 +50,8 @@ const createBackendServer = (baseURL) => {
     api.get(`profit_loss/user_dashboard?exchange=${queryKey[0]}`);
   const profitLossAccountDetails = ({ queryKey }) =>
     api.get(`profit_loss/account?currency=${queryKey[0]}`);
+  const profitLossAccountDetailsByUser = ({ queryKey }) =>
+    api.get(`profit_loss/account/${queryKey[1]}?currency=${queryKey[0]}`);
   const getProfitLoss = () => api.get(`admin/profit_loss/details`);
   // Binance Routes
   const binance = () => api.get("binance");
@@ -137,6 +139,7 @@ const createBackendServer = (baseURL) => {
     updateUserApiKeys,
     configureBotSetting,
     profitLossAccountDetails,
+    profitLossAccountDetailsByUser,
     profitLossStatisticsAdmin,
     profitLossAccountDetailsAdmin,
     updateUserPaidStatus,
