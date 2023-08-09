@@ -29,7 +29,7 @@ import {
   AdminConfig,
 } from "screens";
 
-import { useBinanceSocket, useKucoinSocket } from "hooks";
+import { useBinanceSocket } from "hooks";
 import { ProtectedRoute, SideBar, UserSideBar } from "components";
 import ApiConfiguration from "screens/Admins/ApiConfiguration";
 import Leverage from "screens/Admins/Leverage";
@@ -42,7 +42,7 @@ function App() {
   const { user } = useSelector((store) => store.user);
 
   useBinanceSocket(user?.token);
-  useKucoinSocket(user?.token);
+  // useKucoinSocket(user?.token);
 
   return (
     <main className="custom-main">

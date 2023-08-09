@@ -30,8 +30,6 @@ export const PROFIT_LOSS_DAYS = {
 export const SOCKET_EVENTS = {
   HIT_BINANCE_API: "HIT_BINANCE_API",
   SEND_BINANCE_API_DATA: "SEND_BINANCE_API_DATA",
-  HIT_KUCOIN_API: "HIT_KUCOIN_API",
-  SEND_KUCOIN_API_DATA: "SEND_KUCOIN_API_DATA",
 };
 
 export const ADMIN_ROUTES = [
@@ -75,6 +73,9 @@ export const SUB_ADMIN_ROUTES = [
   "/sub_admin/portfolio",
   "/sub_admin/auto-rsi",
   "/sub_admin/user-management",
+  "/leverage",
+  "/conversion",
+  "/bot-config",
 ];
 
 export const BINANCE_RSI_INTERVAL = [
