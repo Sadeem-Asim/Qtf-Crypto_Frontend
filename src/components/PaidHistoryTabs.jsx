@@ -2,7 +2,12 @@ import { NavLink } from "react-router-dom";
 import { COINS } from "../constants";
 import { useSelector } from "react-redux";
 
-export default function PaidHistoryTabs({ tab, setTab, isPageHistoryPage }) {
+export default function PaidHistoryTabs({
+  tab,
+  setTab,
+  isPageHistoryPage,
+  pathname,
+}) {
   const { user } = useSelector((store) => store.user);
   return (
     <>
@@ -43,20 +48,26 @@ export default function PaidHistoryTabs({ tab, setTab, isPageHistoryPage }) {
               </li>
             </>
           )}
-          {user?.role === "ADMIN" && (
+          {user?.role === "ADMIN" && !pathname ? (
             <>
               <li>
                 <NavLink to={"/pl-account"}>Total Profit</NavLink>
               </li>
-
-              {/* <li>
-                        <NavLink to={'/user-profit'}>Total Profit by Users</NavLink>
-                    </li>
-     */}
               <li>
                 <NavLink to={"/paid-history"}>Paid History</NavLink>
               </li>
             </>
+          ) : pathname ? (
+            <>
+              <li>
+                <NavLink to={"/byUser/pl-account"}>Total Profit</NavLink>
+              </li>
+              {/* <li>
+                <NavLink to={"/byUser/paid-history"}>Paid History</NavLink>
+              </li> */}
+            </>
+          ) : (
+            <></>
           )}
         </ul>
       </div>

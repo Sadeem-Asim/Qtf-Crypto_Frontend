@@ -2,12 +2,15 @@ import { useState, useEffect } from "react";
 import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import { showToastError } from "utils";
+import { useSelector } from "react-redux";
 import { apis } from "services";
 
 export const TRANSFER_COINS = ["USDT", "BTC", "ETH"];
 
 export default function Conversion({ isModal }) {
   const { state } = useLocation();
+  const { data: coins } = useSelector((store) => store.binance);
+  // console.log(coins);
   console.log(state);
   const [update, setUpdate] = useState(0);
   const [fromCoin, setFromCoin] = useState(TRANSFER_COINS[0]);
@@ -15,6 +18,7 @@ export default function Conversion({ isModal }) {
   const [amount, setAmount] = useState(0);
   const [availableBalance, setAvailableBalance] = useState(0);
   const [submitButton, setSubmitButton] = useState("Convert");
+  const [transferAmount, setTransferAmount] = useState(0);
   const handleSubmit = async (event) => {
     try {
       event.preventDefault();
@@ -62,6 +66,21 @@ export default function Conversion({ isModal }) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (fromCoin === "USDT") {
+      setTransferAmount(availableBalance / coins[toCoin]?.price);
+    } else if (
+      (fromCoin === "BTC" || fromCoin === "ETH") &&
+      (toCoin === "BTC" || toCoin === "ETH")
+    ) {
+      setTransferAmount(
+        (availableBalance * coins[fromCoin]?.price) / coins[toCoin]?.price
+      );
+    } else {
+      setTransferAmount(availableBalance * coins[fromCoin]?.price);
+    }
+  }, [coins, fromCoin, availableBalance, update, toCoin]);
 
   useEffect(() => {
     // console.log("HELLO");
@@ -167,6 +186,9 @@ export default function Conversion({ isModal }) {
                         {availableBalance}
                       </InputGroup.Text>
                     </InputGroup>
+                    <Form.Label>
+                      Transfer Amount ({fromCoin}): {transferAmount}
+                    </Form.Label>
                   </Form.Group>
                   <Button
                     type="submit"

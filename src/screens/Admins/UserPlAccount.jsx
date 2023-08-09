@@ -18,8 +18,8 @@ import { COINS, DAILY_PROFIT_DAYS, TOTAL_PROFIT_DAYS } from "../../constants";
 import { textColorClass } from "../../utils";
 
 function UserPlAccount({ isAdmin }) {
-  const { state } = useLocation();
-  console.log(state);
+  const { state, pathname } = useLocation();
+  console.log(state, pathname);
   const [tab, setTab] = useState(COINS.eth);
   const [profitDays, setProfitDays] = useState({
     totalProfitDays: 7,
@@ -48,7 +48,7 @@ function UserPlAccount({ isAdmin }) {
       <div className="dashboard-main custom-scroll">
         <div className="section">
           <Container fluid>
-            <PaidHistoryTabs tab={tab} setTab={setTab} />
+            <PaidHistoryTabs tab={tab} setTab={setTab} pathname={pathname} />
             {isLoading || isRefetching ? (
               <Loader variant="light" />
             ) : (

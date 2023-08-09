@@ -187,6 +187,7 @@ export default function Leverage() {
   useEffect(() => {
     if (selectedCoin) {
       setIsLoading(true);
+      setPosition({});
       apis
         .getPositionRisk(state?.userId, selectedCoin)
         .then((res) => {

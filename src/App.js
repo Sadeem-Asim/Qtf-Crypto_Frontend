@@ -72,7 +72,7 @@ function App() {
           <Route path="user-management" element={<UserManagement />} />
           <Route path="satistics" element={<Satistics />} />
           <Route path="pl-account" element={<PLAccount />} />
-          <Route path="user/pl-account" element={<UserPlAccount />} />
+          <Route path="byUser/pl-account" element={<UserPlAccount />} />
 
           <Route path="conversion" element={<Conversion />} />
           <Route path="leverage" element={<Leverage />} />

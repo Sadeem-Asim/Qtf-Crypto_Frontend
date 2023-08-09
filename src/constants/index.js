@@ -30,6 +30,7 @@ export const PROFIT_LOSS_DAYS = {
 export const SOCKET_EVENTS = {
   HIT_BINANCE_API: "HIT_BINANCE_API",
   SEND_BINANCE_API_DATA: "SEND_BINANCE_API_DATA",
+  GET_BINANCE_STATS: "GET_BINANCE_STATS",
 };
 
 export const ADMIN_ROUTES = [
@@ -53,7 +54,9 @@ export const ADMIN_ROUTES = [
   "/leverage",
   "/conversion",
   "/bot-config",
-  "/user/pl-account",
+  "/byUser/pl-account",
+  "/byUser/paid-history",
+
   // '/bill-management/:id'
 ];
 

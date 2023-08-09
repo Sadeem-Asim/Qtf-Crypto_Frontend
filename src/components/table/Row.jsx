@@ -15,7 +15,7 @@ export default function Row({
     navigate("/leverage", { state: { userId: id } });
   const handleBot = (id) => navigate("/bot-config", { state: { userId: id } });
   const handleProfitLoss = (id) =>
-    navigate("/user/pl-account", { state: { userId: id } });
+    navigate("/byUser/pl-account", { state: { userId: id } });
   return (
     <tr className={""}>
       <td colSpan={colSpan} onClick={handleExpand} role="button">
@@ -50,7 +50,7 @@ export default function Row({
               </p>
               <p>{f_usdt}</p>
             </div>
-            <div className="item">
+            {/* <div className="item">
               <p>
                 ETH<sub>FUTURE</sub> :{" "}
               </p>
@@ -61,7 +61,7 @@ export default function Row({
                 BTC<sub>FUTURE</sub> :{" "}
               </p>
               <p>{f_btc}</p>
-            </div>
+            </div> */}
           </div>
         </div>
       </td>
