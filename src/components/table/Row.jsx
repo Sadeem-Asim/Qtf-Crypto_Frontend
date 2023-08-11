@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-
+import { useSelector } from "react-redux";
 export default function Row({
   expanded,
   handleExpand,
@@ -8,6 +8,8 @@ export default function Row({
 }) {
   const { _id, name, usdt, eth, btc, f_btc, f_eth, f_usdt } = data || {};
   // console.log(_id);
+  const { user } = useSelector((store) => store.user);
+
   const navigate = useNavigate();
   const handleConversion = (id) =>
     navigate("/conversion", { state: { userId: id } });
@@ -50,18 +52,6 @@ export default function Row({
               </p>
               <p>{f_usdt}</p>
             </div>
-            {/* <div className="item">
-              <p>
-                ETH<sub>FUTURE</sub> :{" "}
-              </p>
-              <p>{f_eth}</p>
-            </div>
-            <div className="item">
-              <p>
-                BTC<sub>FUTURE</sub> :{" "}
-              </p>
-              <p>{f_btc}</p>
-            </div> */}
           </div>
         </div>
       </td>
@@ -104,17 +94,21 @@ export default function Row({
         >
           Add/Bot
         </button>
-        <button
-          className="primary-btn"
-          onClick={() => handleProfitLoss(_id)}
-          style={{
-            borderRadius: "50px",
-            boxShadow: "none",
-            marginLeft: "10px",
-          }}
-        >
-          Profit/Loss
-        </button>
+        {user?.role === "ADMIN" && (
+          <>
+            <button
+              className="primary-btn"
+              onClick={() => handleProfitLoss(_id)}
+              style={{
+                borderRadius: "50px",
+                boxShadow: "none",
+                marginLeft: "10px",
+              }}
+            >
+              Profit/Loss
+            </button>
+          </>
+        )}
       </div>
     </tr>
   );

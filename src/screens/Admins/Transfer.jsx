@@ -44,6 +44,7 @@ export default function Transfer({ isModal }) {
         return;
       }
       if (amount > availableBalance) {
+        console.log(amount, availableBalance);
         showToastError({
           message: "Amount Cannot Be Greater Than Available Balance",
         });
@@ -75,7 +76,7 @@ export default function Transfer({ isModal }) {
     apis
       .getAvailableBalance(state?.userId, coin, fromAccount)
       .then((res) => {
-        setAvailableBalance(res.data.balance);
+        setAvailableBalance(Number(res.data.balance));
         setSubmitButton("Convert");
       })
       .catch((err) => {

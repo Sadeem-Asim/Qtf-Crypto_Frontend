@@ -15,23 +15,27 @@ const useBinanceSocket = (token = null) => {
       const api = JSON.stringify(user.api);
       const sendBinanceEvent = `${SOCKET_EVENTS.HIT_BINANCE_API}_${_id}`;
       const getBinanceDataEvent = `${SOCKET_EVENTS.SEND_BINANCE_API_DATA}_${_id}`;
-
+      const getBinanceStats = `${SOCKET_EVENTS.GET_BINANCE_STATS}_${_id}`;
       const SERVER =
         process.env.NODE_ENV === "development" ? LOCAL_SERVER : LIVE_SERVER;
       const socket = io(SERVER, { auth: { token }, query: `api=${api}` });
 
       socket.emit(sendBinanceEvent, socket.id);
       socket.on(getBinanceDataEvent, (data) => {
-        const { balance, ...restData } = data;
-        dispatch(setBinanceValues(restData));
+        const { balance } = data;
         dispatch(setBalance(balance));
+      });
+
+      socket.on(getBinanceStats, (data) => {
+        dispatch(setBinanceValues(data));
+
+        console.log(data);
       });
 
       const id = setInterval(() => {
         socket.emit(sendBinanceEvent, socket.id);
         socket.on(getBinanceDataEvent, (data) => {
-          const { balance, ...restData } = data;
-          dispatch(setBinanceValues(restData));
+          const { balance } = data;
           dispatch(setBalance(balance));
         });
       }, 5000);
