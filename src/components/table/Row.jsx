@@ -34,7 +34,7 @@ export default function Row({
               </p>
               <p>{usdt}</p>
             </div>
-            <div className="item">
+            {/* <div className="item">
               <p>
                 ETH<sub>SPOT</sub> :{" "}
               </p>
@@ -45,7 +45,7 @@ export default function Row({
                 BTC<sub>SPOT</sub> :{" "}
               </p>
               <p>{btc}</p>
-            </div>
+            </div> */}
             <div className="item">
               <p>
                 USDT<sub>FUTURE</sub> :{" "}
