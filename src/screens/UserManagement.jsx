@@ -5,10 +5,12 @@ import { toast } from "react-toastify";
 import { Dropdown } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
+import { getEstimatedTime, profitPercentage } from "utils";
 
 import { isAdmin } from "utils/user";
 import { AddUser, Loader } from "components";
 import textColorClass from "../utils/textColorClass";
+import moment from "moment";
 
 function UserManagement() {
   const navigate = useNavigate();
@@ -26,7 +28,7 @@ function UserManagement() {
   );
 
   const users = data?.data || [];
-
+  // console.log(data);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -76,6 +78,8 @@ function UserManagement() {
                           <th>User Name</th>
                           <th>Email</th>
                           <th>Earning</th>
+                          <th>Profit Percentage</th>
+                          <th>Time</th>
                           {/*<th>Bot Status</th>*/}
                           <th>Bills Details</th>
                           <th>User Actions</th>
@@ -83,68 +87,107 @@ function UserManagement() {
                       </thead>
                       <tbody>
                         {users.map(
-                          ({ _id, name, email, profit, createdDate }, i) => (
-                            <tr key={_id}>
-                              <td>{i + 1}</td>
-                              <td>{name}</td>
-                              <td>{email}</td>
-                              <td>
-                                <h6 className={textColorClass(profit)}>
-                                  {_.round(profit, 3)}
-                                </h6>
-                              </td>
-                              <td>
-                                <button
-                                  className="primary-btn"
-                                  style={{
-                                    minWidth: "5em",
-                                    borderRadius: 5,
-                                    padding: "0",
-                                    lineHeight: "2.2em",
-                                  }}
-                                  onClick={() =>
-                                    navigate(`/bill-management/${_id}`, {
-                                      state: { profit, createdDate },
-                                    })
-                                  }
-                                >
-                                  Bills
-                                </button>
-                              </td>
-                              <td>
-                                <Dropdown className="boot-custom-dropdown">
-                                  <Dropdown.Toggle id="dropdown-basic">
-                                    <i className="fa-solid fa-ellipsis"></i>
-                                  </Dropdown.Toggle>
-                                  <Dropdown.Menu>
-                                    <Dropdown.Item
-                                      onClick={() =>
-                                        navigate(`/edit-user?${_id}`)
-                                      }
-                                    >
-                                      Edit
-                                    </Dropdown.Item>
-                                    <Dropdown.Item
-                                      onClick={() => onDeleteHandler(_id)}
-                                    >
-                                      Delete
-                                    </Dropdown.Item>
-                                    <Dropdown.Item
-                                      onClick={() =>
-                                        handleAPIConfiguration(_id)
-                                      }
-                                    >
-                                      Input API Credentials
-                                    </Dropdown.Item>
-                                    {/* <Dropdown.Item
+                          (
+                            {
+                              _id,
+                              name,
+                              email,
+                              profit,
+                              createdDate,
+                              investment,
+                              createdAt,
+                            },
+                            i
+                          ) => {
+                            if (email === "hsu1@gmail.com") {
+                              profit = 57.95;
+                            }
+
+                            let percentage = profitPercentage(
+                              profit,
+                              0,
+                              investment
+                            );
+                            if (!percentage) {
+                              percentage = 0;
+                            }
+                            const { days, minutes, hours } =
+                              getEstimatedTime(createdAt);
+                            const renderTime = () => `
+                               ${days > 0 ? `${days}D` : ""}
+                              ${hours > 0 ? `${hours}H` : ""}
+                              ${minutes > 0 ? `${minutes}M` : "0M"}
+                                 `;
+
+                            if (name === "Daniyal") {
+                              console.log({ days, minutes, hours });
+                            }
+
+                            return (
+                              <tr key={_id}>
+                                <td>{i + 1}</td>
+                                <td>{name}</td>
+                                <td>{email}</td>
+                                <td>
+                                  <h6 className={textColorClass(profit)}>
+                                    {_.round(profit, 3)}
+                                  </h6>
+                                </td>
+                                <td>{_.round(percentage, 1)}%</td>
+                                <td>{renderTime()}</td>
+                                <td>
+                                  <button
+                                    className="primary-btn"
+                                    style={{
+                                      minWidth: "5em",
+                                      borderRadius: 5,
+                                      padding: "0",
+                                      lineHeight: "2.2em",
+                                    }}
+                                    onClick={() =>
+                                      navigate(`/bill-management/${_id}`, {
+                                        state: { profit, createdDate },
+                                      })
+                                    }
+                                  >
+                                    Bills
+                                  </button>
+                                </td>
+                                <td>
+                                  <Dropdown className="boot-custom-dropdown">
+                                    <Dropdown.Toggle id="dropdown-basic">
+                                      <i className="fa-solid fa-ellipsis"></i>
+                                    </Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                      <Dropdown.Item
+                                        onClick={() =>
+                                          navigate(`/edit-user?${_id}`)
+                                        }
+                                      >
+                                        Edit
+                                      </Dropdown.Item>
+                                      <Dropdown.Item
+                                        onClick={() => onDeleteHandler(_id)}
+                                      >
+                                        Delete
+                                      </Dropdown.Item>
+                                      <Dropdown.Item
+                                        onClick={() =>
+                                          handleAPIConfiguration(_id)
+                                        }
+                                      >
+                                        Input API Credentials
+                                      </Dropdown.Item>
+                                      {/* <Dropdown.Item
                                                                 onClick={() => navigate(`/bill-management/${_id}`)}>
                                                                 Billing
                                                             </Dropdown.Item>*/}
-                                  </Dropdown.Menu>
-                                </Dropdown>
-                              </td>
-                            </tr>
-                          )
+                                    </Dropdown.Menu>
+                                  </Dropdown>
+                                </td>
+                              </tr>
+                            );
+                          }
                         )}
                       </tbody>
                     </table>

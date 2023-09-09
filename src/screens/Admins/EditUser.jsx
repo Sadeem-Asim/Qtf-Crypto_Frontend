@@ -96,53 +96,6 @@ const EditUser = () => {
                 </Col>
                 <Col lg={6}>
                   <h3 className="section-title2">
-                    <img src={imageURL("kucoin.png")} alt="kucoin" />
-                  </h3>
-                  <div className="form-group">
-                    <label htmlFor="apiKey" className="custom-label">
-                      Api Key
-                    </label>
-                    <textarea
-                      className="form-control custom-input"
-                      id="apiKey"
-                      name="apiKey"
-                      rows="2"
-                      cols="50"
-                      onChange={(e) => onChangeApiHandler(e, "ku_coin")}
-                      value={user?.api?.ku_coin?.apiKey}
-                    ></textarea>
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="secret" className="custom-label">
-                      Secret
-                    </label>
-                    <textarea
-                      className="form-control custom-input"
-                      id="secret"
-                      name="secret"
-                      rows="2"
-                      cols="50"
-                      onChange={(e) => onChangeApiHandler(e, "ku_coin")}
-                      value={user?.api?.ku_coin?.secret}
-                    ></textarea>
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="passphrase" className="custom-label">
-                      Passphrase{" "}
-                    </label>
-                    <textarea
-                      className="form-control custom-input"
-                      id="passphrase"
-                      name="passphrase"
-                      rows="2"
-                      cols="50"
-                      onChange={(e) => onChangeApiHandler(e, "ku_coin")}
-                      value={user?.api?.ku_coin?.passphrase}
-                    ></textarea>
-                  </div>
-                </Col>
-                <Col lg={6}>
-                  <h3 className="section-title2">
                     <img src={imageURL("binance-logo.png")} />
                   </h3>
                   <div className="form-group">

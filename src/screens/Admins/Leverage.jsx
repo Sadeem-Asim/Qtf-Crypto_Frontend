@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
-
+import _ from "lodash";
 import { apis } from "services";
 import { useLocation, useNavigate } from "react-router-dom";
 import Conversion from "./Transfer";
@@ -9,10 +9,14 @@ import { showToastError } from "utils";
 import { toast } from "react-toastify";
 import { Loader } from "components";
 import LeverageHistory from "components/admin/LeverageHistory";
-
+import { useSelector } from "react-redux";
+import MyOrder from "components/admin/MyOrder";
 export default function Leverage() {
   const navigate = useNavigate();
-
+  const { futureBTCPrice, futureETHPrice } = useSelector(
+    (store) => store.binance
+  );
+  // console.log(futureBTCPrice, futureETHPrice);
   const toastOptions = {
     autoClose: 2000,
     className: "",
@@ -24,7 +28,7 @@ export default function Leverage() {
   };
 
   const { state } = useLocation();
-  console.log(state);
+  // console.log(state);
 
   const [componentState, setComponentState] = useState({
     modalType: "available",
@@ -35,13 +39,12 @@ export default function Leverage() {
   const [leverage, setLeverage] = useState(1);
   const [amount, setAmount] = useState(0);
   const [tpsl, setTpsl] = useState(false);
+  const [takeProfit, setTakeProfit] = useState(0);
+  // const [stopLoss, setStopLoss] = useState(0);
+  // console.log(takeProfit);
   const [reduceOnly, setReduceOnly] = useState(false);
   const [futurePrices, setFuturePrices] = useState();
-  const [futureCoins, setFutureCoins] = useState([
-    "BTCUSDT",
-    "ETHUSDT",
-    "BNBUSDT",
-  ]);
+  const [futureCoins] = useState(["BTCUSDT", "ETHUSDT"]);
   const [margin, setMargin] = useState({
     type: 1,
     amount: 0,
@@ -135,14 +138,27 @@ export default function Leverage() {
         return;
       }
 
-      const data = {
+      let data = {
         id: state?.userId,
         type: type,
         reduceOnly: reduceOnly,
         amount: amount,
         leverage: leverage,
         coin: selectedCoin,
+        balance: availableBalance,
       };
+      if (tpsl === true) {
+        if (!takeProfit) {
+          showToastError({
+            message: "Please Enter Take Profit",
+          });
+          return;
+        } else {
+          data["tpsl"] = true;
+          data["takeProfit"] = takeProfit;
+        }
+      }
+
       const res = await apis.futureMarketBuySell(data);
       console.log(res);
       toastSuccess(res.data.response.msg);
@@ -184,6 +200,7 @@ export default function Leverage() {
       return;
     }
   };
+
   useEffect(() => {
     if (selectedCoin) {
       setIsLoading(true);
@@ -200,6 +217,8 @@ export default function Leverage() {
           }
         })
         .catch((err) => console.log(err));
+
+      // apis.getActiveOrder
     }
   }, [selectedCoin, state?.userId, update]);
 
@@ -208,15 +227,15 @@ export default function Leverage() {
     apis
       .getFuturePrices(state?.userId)
       .then((res) => {
-        setFutureCoins(res.data.filteredAndSortedKeys);
+        // setFutureCoins(res.data.filteredAndSortedKeys);
         setFuturePrices(res.data.futurePrices);
-        setLoading(false);
       })
       .catch((err) => console.error(err));
     apis
       .getAvailableBalance(state?.userId, "USDT", "Futures Account")
       .then((res) => {
         setAvailableBalance(res.data.balance);
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
@@ -340,7 +359,7 @@ export default function Leverage() {
                   </div>
 
                   <div>
-                    {/* <p>
+                    <p>
                       <input
                         onChange={(e) => {
                           setTpsl((a) => !a);
@@ -352,7 +371,7 @@ export default function Leverage() {
                         disabled={reduceOnly}
                       />
                       <label for="test1">TP/SL</label>
-                    </p> */}
+                    </p>
                     <p>
                       <input
                         onChange={(e) => {
@@ -374,56 +393,53 @@ export default function Leverage() {
                   {tpsl && (
                     <div className="tpsl-box">
                       <h4>TP/SL</h4>
-                      <div className="t-box">
-                        <p>Contract</p>
-                        <span>BTC PERP</span>
-                      </div>
-                      <div className="t-box">
-                        <p>Entry Price</p>
-                        <span>200000</span>
-                      </div>
-                      <div className="t-box">
-                        <p>Last Price</p>
-                        <span>260000</span>
-                      </div>
-
                       <div className="profit-box">
                         <div className="lg-input">
                           <label>Take Profit</label>
                           <div className="input-end-text">
-                            <input placeholder="Price" type="text" />
-                            <p>USDT</p>
-                          </div>
-                        </div>
-                        <div className="sml-input">
-                          <label>Last Price</label>
-                          <div className="input-end-text">
-                            <input type="text" placeholder="Percentage" />
-                            <p>%</p>
+                            <input
+                              placeholder="Price"
+                              type="text"
+                              style={{
+                                color: "white",
+                              }}
+                              onChange={(e) => {
+                                setTakeProfit(e.target.value);
+                              }}
+                            />
+                            <p>{selectedCoin}</p>
                           </div>
                         </div>
                       </div>
 
-                      <div className="profit-box">
+                      {/* <div className="profit-box">
                         <div className="lg-input">
-                          <label>Take Profit</label>
+                          <label>Stop loss</label>
                           <div className="input-end-text">
-                            <input placeholder="Price" type="text" />
-                            <p>USDT</p>
+                            <input
+                              placeholder="Price"
+                              type="text"
+                              style={{
+                                color: "white",
+                              }}
+                              onChange={(e) => {
+                                setStopLoss(e.target.value);
+                              }}
+                            />
+                            <p>{selectedCoin}</p>
                           </div>
                         </div>
-                        <div className="sml-input">
-                          <label>Last Price</label>
-                          <div className="input-end-text">
-                            <input placeholder="Price" type="text" />
-                            <p>%</p>
-                          </div>
-                        </div>
-                      </div>
+                      </div> */}
                       <p>Configure by amount</p>
                     </div>
                   )}
-
+                  {/* <h4
+                        className={textColorClass(
+                          getSelectedExchange("change")
+                        )}
+                      >
+                        {getSelectedExchange("price")}
+                      </h4> */}
                   <div className="availabel-icon">
                     <p>Avail.</p>
                     <span>
@@ -459,6 +475,7 @@ export default function Leverage() {
                       </span>
                     </span>
                   </div>
+
                   <div
                     className="availabel-icon"
                     style={{
@@ -479,6 +496,39 @@ export default function Leverage() {
                       {max} {selectedCoin.replace("USDT", "")}
                     </span>
                   </div>
+
+                  {selectedCoin ? (
+                    selectedCoin === "BTCUSDT" ? (
+                      <div
+                        className="availabel-icon"
+                        style={{
+                          marginBottom: "10px",
+                        }}
+                      >
+                        <p>Mark Price</p>
+                        <span className="text-green">
+                          {_.round(futureBTCPrice, 2)} USDT
+                        </span>
+                      </div>
+                    ) : selectedCoin === "ETHUSDT" ? (
+                      <div
+                        className="availabel-icon"
+                        style={{
+                          marginBottom: "10px",
+                        }}
+                      >
+                        <p>Mark Price</p>
+                        <span className="text-green">
+                          {_.round(futureETHPrice, 2)} USDT
+                        </span>
+                      </div>
+                    ) : (
+                      <></>
+                    )
+                  ) : (
+                    <></>
+                  )}
+
                   <div
                     className="lvg-btns"
                     style={{
@@ -520,7 +570,7 @@ export default function Leverage() {
                                 borderBottom: "2px solid #ff485a",
                               }
                             : {
-                                borderBottom: "2px solid #b39d64",
+                                // borderBottom: "2px solid #b39d64",
                               }
                         }
                         onClick={() =>
@@ -585,7 +635,15 @@ export default function Leverage() {
                               </div>
                               <div>
                                 <p>Mark Price</p>
-                                <span>{position.markPrice}</span>
+
+                                <span className="text-green">
+                                  {_.round(
+                                    position.symbol === "BTCUSDT"
+                                      ? futureBTCPrice
+                                      : futureETHPrice,
+                                    2
+                                  )}
+                                </span>
                               </div>
                             </div>
                             <div className="position-enty-price">
@@ -593,9 +651,22 @@ export default function Leverage() {
                                 <p>QTY({selectedCoin.replace("USDT", "")})</p>
                                 <span>{position.positionAmt}</span>
                               </div>
-                              <div>
+                              {/* <div>
                                 <p>Realized PNL</p>
                                 <span>{position.unRealizedProfit}</span>
+                              </div> */}
+                              <div>
+                                <p>Realized PNL</p>
+                                <span className="text-green">
+                                  {_.round(
+                                    position.symbol === "BTCUSDT"
+                                      ? (futureBTCPrice - position.entryPrice) *
+                                          position.positionAmt
+                                      : (futureETHPrice - position.entryPrice) *
+                                          position.positionAmt,
+                                    4
+                                  )}
+                                </span>
                               </div>
                               <div>
                                 <p>
@@ -642,7 +713,16 @@ export default function Leverage() {
                                     position.symbol,
                                     position.side,
                                     position.entryPrice,
-                                    position.unRealizedProfit
+                                    _.round(
+                                      position.symbol === "BTCUSDT"
+                                        ? (futureBTCPrice -
+                                            position.entryPrice) *
+                                            position.positionAmt
+                                        : (futureETHPrice -
+                                            position.entryPrice) *
+                                            position.positionAmt,
+                                      4
+                                    )
                                   );
                                 }}
                                 className="lvg-buy-btn"
@@ -669,8 +749,14 @@ export default function Leverage() {
                     )}
 
                     {componentState.orderTab === "myOrder" && (
-                      <div className="no-order-box">
-                        <p>No Orders Yet</p>
+                      <div className="">
+                        <MyOrder
+                          update={update}
+                          setUpdate={setUpdate}
+                          id={state?.userId}
+                          coin={selectedCoin}
+                          quantity={position?.positionAmt}
+                        />
                       </div>
                     )}
                   </div>

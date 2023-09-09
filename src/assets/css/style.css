@@ -1360,7 +1360,7 @@ dd {
   color: white;
   font-size: 18px;
   border: 2px solid transparent;
-  /* border-bottom: 2px solid #b39d64; */
+  border-bottom: 2px solid #b39d64;
 }
 .leverage-info .non-active-tab {
   background-color: transparent;

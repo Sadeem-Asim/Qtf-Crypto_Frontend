@@ -34,6 +34,8 @@ const INITIAL_STATE = {
     },
   },
   balance: 0.0,
+  futureBTCPrice: 0,
+  futureETHPrice: 0,
 };
 
 const binanceSlice = createSlice({
@@ -47,9 +49,20 @@ const binanceSlice = createSlice({
     setBalance: (state, action) => {
       state.balance = action.payload;
     },
+    setBTCfuturePrice: (state, action) => {
+      state.futureBTCPrice = action.payload;
+    },
+    setETHfuturePrice: (state, action) => {
+      state.futureETHPrice = action.payload;
+    },
   },
 });
 
-export const { setBinanceValues, clearBinanceValues, setBalance } =
-  binanceSlice.actions;
+export const {
+  setBinanceValues,
+  clearBinanceValues,
+  setBalance,
+  setBTCfuturePrice,
+  setETHfuturePrice,
+} = binanceSlice.actions;
 export default binanceSlice.reducer;

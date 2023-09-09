@@ -28,6 +28,11 @@ function UserAssignManagement() {
     setUserAssign({ sub_admin: id, users: userId });
     handleShowAdmin();
   };
+
+  const handleDeleteSubAdmin = async (id) => {
+    apis.deleteSubAdmin(id);
+    refetchAdmins();
+  };
   return (
     <>
       <div className="dashboard-main custom-scroll">
@@ -88,6 +93,13 @@ function UserAssignManagement() {
                                       }
                                     >
                                       Assign Users
+                                    </Dropdown.Item>
+                                    <Dropdown.Item
+                                      onClick={() =>
+                                        handleDeleteSubAdmin(item?._id)
+                                      }
+                                    >
+                                      Delete
                                     </Dropdown.Item>
                                   </Dropdown.Menu>
                                 </Dropdown>

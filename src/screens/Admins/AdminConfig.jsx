@@ -34,6 +34,7 @@ function AdminConfig() {
   //   const { userOrders, refetchOrders } = useFetchUserOrders();
   const [userOrders, setOrders] = useState([]);
   const { data: coins } = useSelector((store) => store.binance);
+  // console.log(coins);
   const [balance, setBalance] = useState();
   const [coin, setCoin] = useState(null);
   const [bot, setBot] = useState({ id: null, exchange: "", user_id: null });

@@ -3,7 +3,12 @@ import io from "socket.io-client";
 import { useDispatch, useSelector } from "react-redux";
 
 import { LIVE_SERVER, LOCAL_SERVER, SOCKET_EVENTS } from "../constants";
-import { setBalance, setBinanceValues } from "redux/slices/binance.slice";
+import {
+  setBTCfuturePrice,
+  setBalance,
+  setBinanceValues,
+  setETHfuturePrice,
+} from "redux/slices/binance.slice";
 
 const useBinanceSocket = (token = null) => {
   const dispatch = useDispatch();
@@ -27,9 +32,16 @@ const useBinanceSocket = (token = null) => {
       });
 
       socket.on(getBinanceStats, (data) => {
-        dispatch(setBinanceValues(data));
-
-        console.log(data);
+        if (!data.symbol) {
+          dispatch(setBinanceValues(data));
+          // console.log(data);
+        } else if (data.symbol === "BTC") {
+          const { futurePrice } = data;
+          dispatch(setBTCfuturePrice(futurePrice));
+        } else if (data.symbol === "ETH") {
+          const { futurePrice } = data;
+          dispatch(setETHfuturePrice(futurePrice));
+        }
       });
 
       const id = setInterval(() => {

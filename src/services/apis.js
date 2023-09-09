@@ -80,7 +80,13 @@ const createBackendServer = (baseURL) => {
     api.get(
       `taapi/rsi?exchange=${exchange}&symbol=${symbol}&interval=${interval}`
     );
+
+  const getActiveOrder = (id, coin) =>
+    api.get(`binance/activeOrder/${id}/${coin}`);
+  const updateTakeProfit = (body) => api.put(`binance/takeProfit`, body);
+  const updateProfit = (body) => api.put(`binance/profit`, body);
   const userAssignAdmin = (body) => api.put(`admin/sub_admin`, body);
+  const deleteSubAdmin = (id) => api.delete(`admin/sub_admin/${id}`);
   const configureBotSetting = ({ id, body }) =>
     api.put(`bots/settings/${id}`, body);
   const profitLossStatisticsAdmin = () =>
@@ -157,6 +163,10 @@ const createBackendServer = (baseURL) => {
     adjustMargin,
     getLeverageStats,
     universalConversion,
+    deleteSubAdmin,
+    getActiveOrder,
+    updateTakeProfit,
+    updateProfit,
   };
 };
 
